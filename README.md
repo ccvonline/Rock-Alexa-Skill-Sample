@@ -38,3 +38,27 @@ When a user invokes our Alexa Skill a request is sent to an endpoint that we def
 	- Give your custom intent a Name.  This name will be sent as part of the JSON request when the Lambda function is envoked. A good practice is to end the name with the word Intent. For our example this will be VerseOfTheDayIntent.  
 	- Enter the Sample uterances that users will say when invoking your intent. Once you have typed a phrase or question, click the add symbol to the right of the entry box.  You can enter as many utterances as you would like.
 	- Once you have entered all of your utterances, click the Build Model button at the top.  NOTE:  Any time you add an intent or utterance you must re-build your model before the changes will be available to the user.
+
+## Step 2) Create your Lambda Function
+- In order to complete this step, you will need 
+- Go to http://aws.amazon.com and login to your AWS Console.  If you don't already have an account, click Create an AWS Account and follow the steps to create your account.
+- Click Services in the main menu and select Lambda under the Compute Section.
+- Make sure you have a region selected that will work with Skills Kit.  Currently, the regions avaiable to use for this are US East (N. Virginia), US West (Oregon),  Asia Pacific (Tokyo) and EU (Ireland).
+- Click the Create function button near the top of your screen.
+- Select Author From Scratch.
+- Give the Function a Name.  For our purposes we will use verseOfTheDayAlexa.  
+- Under Runtime, select Node.js 8.10.
+- Under Roles select Create new role from template(s).
+- Create a role name.  For our project we will use vodAlexaSkill.
+- From the Policy Templates list, select Simple Microservice Permissions.
+- Click the Create Function button.
+
+Now we must configure the trigger that will be used to invoke our function.  In our case, this will be an Alexa Skill.  In order for the Alexa Skill we created in step one to have permission to invoke our function, we must configure at least one Alexa Skills Kit Trigger.  We will also be enabling skill ID verification.  This will ensure that our function can only be triggered by our skill and allow us to avoid having to do any kind of id verification in the code.
+
+- In a new browser tab or window, Go back to the custom alexa skill we created in step 1.  You can get there by going to https://developer.amazon.com/alexa.  Click the Your Alexa Consoles link in the upper right and select Skills.  
+- Locate your skill from the list and copy the Skill ID which is displayed right below the skill name.
+- Back on the Lambda page, make sure you have the Configuration Tab selected and the Designer window fully extended.
+- In the Triggers list on the left hand side of the designer window, select Alexa Skills Kit.
+- In the Configure triggers box, make sure Skill ID verification is enabled. 
+- In the Skill ID Box, enter the skill ID of the custom skill we created in step 1.
+- Click the Add button on the bottom right of the Configure Triggers box and then click save on the upper right hand side of the page.
