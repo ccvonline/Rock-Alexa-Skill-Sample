@@ -15,12 +15,26 @@ When a user invokes our Alexa Skill a request is sent to an endpoint that we def
 
 ## Step 1) Create your custom Alexa Skill
 
-1) Log into your Amazon Developer account at https://developer.amazon.com/alexa.  Click the sign in button in the upper right hand corner.  If you don't arleady have an account simply follow the instructions to create one for free.
+- Log into your Amazon Developer account at https://developer.amazon.com/alexa.  Click the sign in button in the upper right hand corner.  If you don't arleady have an account simply follow the instructions to create one for free.
 
-2) After you log in, hover your mouse over "Your Alexa Consoles" text at the top of the screen and click the Skills Link.
+- After you log in, hover your mouse over "Your Alexa Consoles" text at the top of the screen and click the Skills Link.
 
-3) Once in the Alexa Skills console, select Create Skill near the top right of the list of the Alexa Skills.
+- Once in the Alexa Skills console, select Create Skill near the top right of the list of the Alexa Skills.
 
-4) Enter a name for your skill. This name is displayed in the Alexa Skills Store. Here you can also change the default language if desired.  Make sure Custom is selected for the skill model.  Once you have finished click the "Create Skill" button in the upper right hand corner.
+- Enter a name for your skill. This name is displayed in the Alexa Skills Store. Here you can also change the default language if desired.  Make sure Custom is selected for the skill model.  Once you have finished click the "Create Skill" button in the upper right hand corner.
 
-5) On the Choose A Template page, select "Start From Scratch" and then click the Choose button in the upper right hand corner.
+- On the Choose A Template page, select "Start From Scratch" and then click the Choose button in the upper right hand corner.
+
+- Set up the Invocation name for your Skill.
+   
+	- Click on Invocation in the Custom skill menu on the left hand side.
+	- Enter a Skill Invocation Name in the provided field.  This is what users will say to 
+	activate your skill.
+	- Click the Save Model button at the top of the screen.
+
+- Set up the Interaction model for your Skill.  Interactions are the basis for all Alexa Skills.  They tell Alexa that specific responses are available based on the users request.
+
+	- Click the Add Button next to Intents in the Custom Skill builder menu.
+	- Give your custom intent a Name.  This name will be sent as part of the JSON request when the Lambda function is envoked. A good practice is to end the name with the word Intent. For our example this will be VerseOfTheDayIntent.  
+	- Enter the Sample uterances that users will say when invoking your intent. Once you have typed a phrase or question, click the add symbol to the right of the entry box.  You can enter as many utterances as you would like.
+	- Once you have entered all of your utterances, click the Build Model button at the top.  NOTE:  Any time you add an intent or utterance you must re-build your model before the changes will be available to the user.
