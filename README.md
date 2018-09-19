@@ -62,3 +62,27 @@ Now we must configure the trigger that will be used to invoke our function.  In 
 - In the Configure triggers box, make sure Skill ID verification is enabled. 
 - In the Skill ID Box, enter the skill ID of the custom skill we created in step 1.
 - Click the Add button on the bottom right of the Configure Triggers box and then click save on the upper right hand side of the page.
+
+You should now have a fully configured Lambda function with the appropriate permissions for communicating with the Alexa Skills kit.   Next
+we need to upload our code and test our skill.
+
+## Step 3) Upload the code package to your lambda Function.
+- Download or clone the Verse Of The Day Sample code package at https://github.com/ccvonline/Rock-Alexa-Skill-Sample
+- run npm install from a command prompt in windows or the terminal on a mac.
+- Open the constants.js file in the code editor of your choice.
+- Replace churchInfo.baseURL and churchInfo.authToken with the data specific to your rock installation.
+- Save the file and create a Zip file containing index.js, constants.js, package.json, package-lock.json the Rock folder and the node_modules folder.
+- From the Lambda management page, make sure your Lambda function configuration window is selected.  You can do this by clicking the box which shows your function name in the designer block.
+- Scroll down to the function code section.  
+- From the code entry type dropdown, select Upload a .zip file.
+- Click the upload button and select the Archive.zip file from the code sample code package.
+- Click the Save button in the upper right hand corner.
+
+## Step 4) Test your Lambda function.
+- At the top of the screen select configure test events from the Select a test event drop down.
+- Give the test event a name.  
+- Open the test/verseOfTheDayIntentRequest.js file from the code package.  Copy the contents of this file and paste it into the code window of the Configure Test Event dialog.
+- Click the Save button.
+- Click the Test button. 
+
+## Step 5) Test your Alexa SKill.
