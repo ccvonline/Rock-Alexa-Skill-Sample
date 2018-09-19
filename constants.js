@@ -70,8 +70,5 @@ exports.verseOfTheDayContent = [
 ]
 
 exports.contentChannels = {
-  sermonAudio: 8,
-  tipOfTheWeek: 254,
-  thisWeekAtCCV: 254,
   vod: 249
 }

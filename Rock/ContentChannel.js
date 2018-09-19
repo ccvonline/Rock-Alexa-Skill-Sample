@@ -1,29 +1,30 @@
 const Rock = require('./RockRequest');
-const utils = require('./utils.js');
 
-'use strict';
-
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+const __assign = (this && this.__assign) || Object.assign || function(t) {
+	for (var s, i = 1, n = arguments.length; i < n; i++) {
+		s = arguments[i];
+		for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+			t[p] = s[p];
+	}
+	return t;
 };
 
-const ContentChannel = ( ()=>{
+const ContentChannel = ( function(){
 	
-	const ContentChannel = (opts) => {
-		opts.path = 'ContentChannelItems';
-		let RockRequest = Rock.RockRequest.init(opts);
+	const ContentChannel = () => {};
 
-		return __assign({}, RockRequest);
-	}
+	ContentChannel.init = (opts) => {
+		opts.path = 'ContentChannelItems';
+		opts.requestMethod = 'GET';
+		let request = Rock.RockRequest;
+		request.init(opts);
+		console.log('Request', request);
+		return request;
+	};
 
 	return ContentChannel;
 
 }());
 
-exports.ContentChannel = ContentChannel
+exports.ContentChannel = ContentChannel;
 

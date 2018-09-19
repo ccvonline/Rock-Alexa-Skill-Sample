@@ -1,16 +1,17 @@
 const https = require('https');
 const utils = require('./utils');
 
-const RockRequest = ( () => {
+const RockRequest = ( function(){
 
 	let baseURL = '';
 	let path = '';
 	let filters = {};
 	let authToken = null;
 	let initialized = false;
-	let params = {};
-
-	return { 
+	let urlParams = {};
+	let requestMethod = 'GET';
+	let allowedMethods = ['GET','POST'];
+	let that = { 
 
 		init: (opts) => {
 
@@ -36,9 +37,16 @@ const RockRequest = ( () => {
 			path = opts.path;
 			authToken = opts.authToken;
 
-			if(opts.hasOwnProperty(filters)){
-				filters = Object.assign(filters, opts.filters);
+			if(opts.hasOwnProperty('filters')){
+				filters = opts.filters;
 			}
+
+			if(opts.hasOwnProperty('urlParams')){
+				urlParams = opts.urlParams;
+			}
+
+			console.log('OPTS', opts);
+			initialized = true;
 	
 		},
 
@@ -61,7 +69,15 @@ const RockRequest = ( () => {
 		},
 
 		setPath: (p)=>{
-			path = p
+			path = p;
+		},
+
+		setMethod: (m)=>{
+			if(allowedMethods.includes(m)){
+				requestMethod = m;
+			}else{
+				throw utils.createRockSdkError('RockRequestError',`The ${m} method is not currently supported`);
+			}
 		},
 
 		getFilterString:()=>{
@@ -72,19 +88,19 @@ const RockRequest = ( () => {
 				out += filterName + ' eq ' + filters[filterName] + ' and ';
 			}
 			out = out.substring(0, out.lastIndexOf(' and '));
-			return '?$filters=' + encodeURIComponent(out);
+			return '?$filter=' + encodeURIComponent(out);
 		},
 
 		getParamModifiers: ()=>{
 			let out = '';
 
-			if(!Object.keys(params).length)
+			if(!Object.keys(urlParams).length)
 				return out;
 
 			out += '&';
 
-			for(paramName in params){
-				out += paramName + '=' + params[paramName] + '&';
+			for(paramName in urlParams){
+				out += paramName + '=' + urlParams[paramName] + '&';
 			}
 			return out.substring(0, out.lastIndexOf('&'));
 		},
@@ -95,13 +111,13 @@ const RockRequest = ( () => {
 
 			//Make sure the path does not already contain a starting or trailing slash
 			while(path.charAt(0) === '/'){
-				path = path.substring(1)
+				path = path.substring(1);
 			}
 			while(path.charAt(path.length - 1) === '/'){
 				path = path.substring(0, path.lastIndexOf('/'));
 			}
 
-			fullPath += path + this.getFilterString() + this.getParamModifiers;
+			fullPath += path + that.getFilterString() + that.getParamModifiers();
 
 			return fullPath;
 		},
@@ -113,19 +129,19 @@ const RockRequest = ( () => {
 			}
 
 			let reqOptions = { 
-            	host: baseURL, 
-            	port: '443', 
-            	path: , 
-            	method: 'GET', 
+				host:baseURL, 
+				port:'443', 
+				path:that.getFullPath(), 
+				method:requestMethod, 
             	headers: { 
-                	'Content-Type': 'application/json', 
-                	'Authorization-Token': 'PsUKsQGcqVMOWI6N6M6gxgu7'
+                	'Content-Type':'application/json', 
+                	'Authorization-Token':authToken
             	} 
         	}
 
 			return new Promise( (resolve,reject) => {
 
-				var req = https.request(options, (res) => {
+				var req = https.request(reqOptions, (res) => {
 
 		            res.setEncoding('utf8');
 
@@ -164,8 +180,14 @@ const RockRequest = ( () => {
 
 			});
 		}
-	}
+	};
+
+	return that;
 
 }());
 
 exports.RockRequest = RockRequest;
+
+const ContentChannel_1 = require('./ContentChannel');
+
+exports.ContentChannel = ContentChannel_1.ContentChannel;

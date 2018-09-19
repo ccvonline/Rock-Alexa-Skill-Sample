@@ -1,0 +1,11 @@
+{
+  "name": "rock",
+  "version": "1.0.0",
+  "description": "Rock RMS SDK for Node",
+  "main": "RockRequest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ben Tweedy",
+  "license": "ISC"
+}

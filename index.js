@@ -106,78 +106,77 @@ const VerseOfTheDayIntentHandler = {
 
         let speechText = '';
         let displayText = '';
-        let verseDate = null;
         let vData = null;
-        let filterString = null;
+        let verseDate = new Date();
+        let requestOpts = {
+          baseURL:constants.churchInfo.baseUrl,
+          authToken: constants.churchInfo.authToken,
+          filters: {
+            "ContentChannelId":constants.contentChannels.vod,
+            "month(StartDateTime)": (verseDate.getMonth() + 1),
+            "day(StartDateTime)": verseDate.getDate(),
+            "year(StartDateTime)": verseDate.getFullYear()
+          },
+          urlParams:{
+            "LoadAttributes":"true"
+          }
+        };
 
-        console.log('VersOfTheDayIntentHandler');
+        console.log('VersOfTheDayIntentHandler');;
+        let verseRequest = Rock.ContentChannel.init(requestOpts);
 
-        /** If the user included any kind of date related request, ie.  "Get Yesterday", 
-         * An amazon date value will be provided.  Otherwise, use todays date. 
-         */
-        if(handlerInput.requestEnvelope.request.intent.slots.for_date.hasOwnProperty('value')){
-            verseDate = new Date(handlerInput.requestEnvelope.request.intent.slots.for_date.value);
-        }else{
-            verseDate = new Date();
-        }
+        console.log("VerseRequest", verseRequest);
+          
+        console.log (verseRequest.getFullPath());
+        let rData = await verseRequest.send();
+          // .then((data)=>{
+          //   console.log('Response Data', data);
+          //   return data;
+          // });
 
-        filterString = getFilterString(249,verseDate,true);
-
-        let endPoint = '/api/ContentChannelItems?$filter='+filterString+'&LoadAttributes=True';
-
-        let rData = await doRockRequest(endPoint);
+        //console.log(rData);
 
         /** 
-         * If no data is returned, pull in all verse of the day content.  This
+         * If no data is returned, pull a random default verse of the day from the constants file.  This
          * way we're guaranteed to receive at least one verse of the day.
          * @param  {Array} rData The returned data.
          */
         if(!rData.length){
-            filterString = getFilterString(249,null,false,true);
-            endPoint = '/api/ContentChannelItems?$filter='+
-                filterString+
-                '&LoadAttributes=True';
-            rData = await doRockRequest(endPoint);
+          vData = constants.verseOfTheDayContent[Math.floor(Math.random()*constants.verseOfTheDayContent.length)]
+        }else{
+          vData = rData[0];
         }
 
-        if(rData.length){
-            rData.sort(dateSortDesc);
-            let vData = rData[0];
-
-            /**
-             * Build the response.
-             */
-            if('Introduction' in vData.AttributeValues){
-                if(vData.AttributeValues.Introduction.Value.length > 1){
-                    speechText += vData.AttributeValues.Introduction.Value + '<break time="1s"/>';
-                    displayText += vData.AttributeValues.Introduction.Value;
-                }
+        
+        /**
+          * Build the response.
+          */
+        if('Introduction' in vData.AttributeValues){
+            if(vData.AttributeValues.Introduction.Value.length > 1){
+                speechText += vData.AttributeValues.Introduction.Value + '<break time="1s"/>';
+                displayText += vData.AttributeValues.Introduction.Value;
             }
+        }
 
-            speechText += vData.Content;
-            displayText += vData.Content;
+        speechText += vData.Content;
+        displayText += vData.Content;
 
-            if('Verse' in vData.AttributeValues){
-                speechText += ' ' + vData.AttributeValues.Verse.Value + '<break time="1s"/>';
-                displayText += ' ' + vData.AttributeValues.Verse.Value;
-            }
+        if('Verse' in vData.AttributeValues){
+            speechText += ' ' + vData.AttributeValues.Verse.Value + '<break time="1s"/>';
+            displayText += ' ' + vData.AttributeValues.Verse.Value;
+        }
 
-            if('Conclusion' in vData.AttributeValues){
-                speechText += ' ' + vData.AttributeValues.Conclusion.Value;
-                displayText += ' ' + vData.AttributeValues.Conclusion.Value;
-            }
-
-        }else{
-            speechText = 'I\'m sorry, but I couldn\'t find any information that matches your request';
+        if('Conclusion' in vData.AttributeValues){
+            speechText += ' ' + vData.AttributeValues.Conclusion.Value;
+            displayText += ' ' + vData.AttributeValues.Conclusion.Value;
         }
 
         return handlerInput.responseBuilder
                 .speak(speechText)
                 .withSimpleCard('Verse Of The Day: ', displayText)
-                .getResponse()
-                .reprompt();
+                .getResponse();
     }
-};
+}
 
 /**
  * HelpIntentHandler: handler, used to handle any request containing a 
@@ -405,5 +404,4 @@ const ErrorHandler = {
         .reprompt('Sorry, I can\'t understand the command. Please say again.')
         .getResponse();
     },
-};
 };

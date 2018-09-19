@@ -84,5 +84,42 @@ we need to upload our code and test our skill.
 - Open the test/verseOfTheDayIntentRequest.js file from the code package.  Copy the contents of this file and paste it into the code window of the Configure Test Event dialog.
 - Click the Save button.
 - Click the Test button. 
+- You should get a Succeeded excecution result along with the functions output.  The output should look something like the following:
+```
+{
+  "version": "1.0",
+  "response": {
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "<speak>Today's verse comes from the first book of Timothy.<break time=\"1s\"/>But godliness with contentment is great gain. For we brought nothing into the world, and we can take nothing out of it. 1 Timothy 6:6-7<break time=\"1s\"/></speak>"
+    },
+    "card": {
+      "type": "Simple",
+      "title": "Verse Of The Day: ",
+      "content": "Today's verse comes from the first book of Timothy.But godliness with contentment is great gain. For we brought nothing into the world, and we can take nothing out of it. 1 Timothy 6:6-7 "
+    }
+  },
+  "userAgent": "ask-node/2.0.9 Node/v8.10.0",
+  "sessionAttributes": {}
+}
+```
+
+Once you have succesfully tested your function you are ready to test your skill.  In order to do so, you need
+to enter your Lambda functions ARN as the skills endpoint.  See below for instructions. 
+
 
 ## Step 5) Test your Alexa SKill.
+- From your Lamdba function console, the arn can be located in the upper right hand corner. Copy the arn string.
+- Navigate to your Skill in the Alexa Skill Console.  
+- From the build page, select the Endpoint Tab on the right. 
+- Paste the arn into the Default Region field.  
+- Click the save endpoints button at the top of the screen. We are now ready to test.
+- Click the test tab at the top of the screen.  
+- Toggle the test is enabled for this skill button in order to activate the testing interface.
+- You can either type or speak your commands to test. In the Alexa Simulator, type the following
+  in the provided field: "Open sample verse of the day".  You can replace "sample verse of the day" with the invocation phrase you chose earlier in the process.
+- You should get a response of "Welcome to {Your Church Name}!  If you need help, just ask."  You will aslo see the request sent by the Alexa Skills Kit under JSON Input and the response returned by your Lambda function under JSON output.  This can be incredibly helpful for troubleshooting purposes.
+- Now type "Get the verse of the day".  Alexa should respond with the verse of the day.
+- You can also type or say "Get the verse of the Day from sample verse of the day" where "sample verse of the day" is your skills invocation phrase.
+
+Congratulations...You now have a functioning Verse of the Day Alexa Skill.  In order to make your skill available to the general public, simply fill out all of the requested information under the Distribution tab of the Alexa Skills console for your skill.  You can find complete documentation on this here: https://developer.amazon.com/docs/devconsole/launch-your-skill.html.  Once complete you must complete a certification process and submit your skill for review.  Documentation for completing the certifitation process can be found here: https://developer.amazon.com/docs/devconsole/launch-your-skill.html
