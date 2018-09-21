@@ -39,8 +39,6 @@ exports.handler = function (event, context) {
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
-        YesHandler,
-        NoHandler,
         ExitHandler
       )
       .addErrorHandlers(ErrorHandler)
@@ -111,30 +109,18 @@ const VerseOfTheDayIntentHandler = {
         let requestOpts = {
           baseURL:constants.churchInfo.baseUrl,
           authToken: constants.churchInfo.authToken,
-          filters: {
-            "ContentChannelId":constants.contentChannels.vod,
-            "month(StartDateTime)": (verseDate.getMonth() + 1),
-            "day(StartDateTime)": verseDate.getDate(),
-            "year(StartDateTime)": verseDate.getFullYear()
-          },
           urlParams:{
             "LoadAttributes":"true"
           }
         };
 
-        console.log('VersOfTheDayIntentHandler');;
-        let verseRequest = Rock.ContentChannel.init(requestOpts);
+        let verseRequest = Rock.ContentChannel.init(requestOpts)
+          .filterByDate(verseDate)
+          .filterByMonth(verseDate)
+          .filterByYear(verseDate)
+          .filterByChannelId(constants.contentChannels.vod);
 
-        console.log("VerseRequest", verseRequest);
-          
-        console.log (verseRequest.getFullPath());
         let rData = await verseRequest.send();
-          // .then((data)=>{
-          //   console.log('Response Data', data);
-          //   return data;
-          // });
-
-        //console.log(rData);
 
         /** 
          * If no data is returned, pull a random default verse of the day from the constants file.  This
@@ -245,62 +231,6 @@ const CancelAndStopIntentHandler = {
     }
 };
 
-/**
- * YesHandler: handler will be fired for Amazon Yes intent requests.
- * We are currently only using this for audio player intents.  
- * 
- * @type {Object}
- * 
- * @method canHandle is used to determine if this Request handle can be used to respond to a specific request.
- * Should simply return a bool value.  If true, the objects handle method will be called.
- * 
- * @method handle is called if canHandle returns true.  Must return either a response object or, a promise which
- * should resolve with a response object.  See documentation notes below. 
- * 
- */
-const YesHandler = {
-  async canHandle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
-    const request = handlerInput.requestEnvelope.request;
-
-    return !playbackInfo[playbackInfo.type].inPlaybackSession && request.type === 'IntentRequest' && request.intent.name === 'AMAZON.YesIntent';
-  },
-  handle(handleInput) {
-    return controller.play(handleInput);
-  },
-};
-
-/**
- * NoHandler: handler will be fired for Amazon No intent requests.
- * We are currently only using this for audio player intents.  
- * 
- * @type {Object}
- * 
- * @method canHandle is used to determine if this Request handle can be used to respond to a specific request.
- * Should simply return a bool value.  If true, the objects handle method will be called.
- * 
- * @method handle is called if canHandle returns true.  Must return either a response object or, a promise which
- * should resolve with a response object.  See documentation notes below. 
- * 
- */
-const NoHandler = {
-  async canHandle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
-    const request = handlerInput.requestEnvelope.request;
-
-    return !playbackInfo[playbackInfo.type].inPlaybackSession && request.type === 'IntentRequest' && request.intent.name === 'AMAZON.NoIntent';
-  },
-  async handle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
-
-    playbackInfo[playbackInfo.type].index = 0;
-    playbackInfo[playbackInfo.type].offsetInMilliseconds = 0;
-    playbackInfo[playbackInfo.type].playbackIndexChanged = true;
-    playbackInfo[playbackInfo.type].hasPreviousPlaybackSession = false;
-
-    return controller.play(handlerInput);
-  },
-};
 
 /**
  * ExitHandler: handler will be fired for Amazon Exit, Stop or Cancel intent requests.
