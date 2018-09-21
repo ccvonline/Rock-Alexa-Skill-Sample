@@ -133,9 +133,7 @@ const RockRequest = ( function(){
 			};
 			return new Promise( (resolve,reject) => {
 				var req = https.request(reqOptions, (res) => {
-
 		            res.setEncoding('utf8');
-
 		            let returnData = "";
 		            let out = {};
 
@@ -153,11 +151,8 @@ const RockRequest = ( function(){
 		                // We can see it in the log output via:
 		                // console.log(JSON.stringify(returnData))
 		                // we may need to parse through it to extract the needed data
-
 		                out = JSON.parse(returnData);              
-
 		                resolve(out);
-
 		            });
 
 		        });

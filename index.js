@@ -120,7 +120,7 @@ const VerseOfTheDayIntentHandler = {
           .filterByYear(verseDate)
           .filterByChannelId(constants.contentChannels.vod);
 
-        let rData = await verseRequest.send();
+        let rData = await verseRequest.send().catch(err => console.log(err));
 
         /** 
          * If no data is returned, pull a random default verse of the day from the constants file.  This
