@@ -118,6 +118,7 @@ const RockRequest = ( function(){
 		},
 
 		send: ()=>{
+			
 			if(!initialized){
 				throw utils.createRockSdkError('RockRequestError','Request not initialized: You must first call the init method');
 			}
@@ -131,6 +132,7 @@ const RockRequest = ( function(){
 					'Authorization-Token':authToken
 				} 
 			};
+
 			return new Promise( (resolve,reject) => {
 				var req = https.request(reqOptions, (res) => {
 		            res.setEncoding('utf8');

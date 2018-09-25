@@ -3,7 +3,7 @@
 exports.churchInfo = {
 	baseUrl:'rock.ccv.church',
 	name:'Christ\'s Church of The Valley',
-	authToken:'PsUKsQGcqVMOWI6N6M6gxgu7'
+	authToken:'your_auth_token'
 }
 
 exports.verseOfTheDayContent = [

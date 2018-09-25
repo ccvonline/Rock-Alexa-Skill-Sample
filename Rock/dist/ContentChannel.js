@@ -23,12 +23,12 @@ const ContentChannel = ( function(){
 			},
 			filterByMonth: function(dateObj){
 				dateObj = dateObj || new Date();
-				request.addFilter({"month(StartDateTime)": dateObj.getMonth()});
+				request.addFilter({ "month(StartDateTime)": ( dateObj.getMonth() + 1) });
 				return this;
 			},
 			filterByYear: function(dateObj){
 				dateObj = dateObj || new Date();
-				request.addFilter({"Year(StartDateTime)": dateObj.getFullYear() });
+				request.addFilter({"year(StartDateTime)": dateObj.getFullYear() });
 				return this;
 			},
 			filterByChannelId: function(id){
